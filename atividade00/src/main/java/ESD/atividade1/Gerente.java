@@ -1,26 +1,20 @@
 package ESD.atividade1;
 
-public class Gerente {
-    private String nome;
-    private double salarioBase;
-    protected double salario;
+public class Gerente extends Funcionario {
 
     public Gerente(String nome) {
-        this.nome = nome;
-        this.salarioBase = SalarioBase.BASE.getValor();
-        this.salario = salarioBase;
+        super(nome);
     }
 
-    public double getSalario() {
-        return salario;
+    public void bonusGerente (int qtdFuncionarios) {
+        this.bonus = (this.salarioBase * 0.01) * qtdFuncionarios;
+        this.salario = salarioBase + bonus;
     }
 
-    protected void setSalario(double salario) {
-        this.salario = salario;
-    }
-
-    public double getSalarioBase() {
-        return salarioBase;
+    @Override
+    public void bonusFinalizacao () {
+        this.bonus += this.salarioBase * 0.10;
+        this.salario = salarioBase + bonus;
     }
 
     @Override

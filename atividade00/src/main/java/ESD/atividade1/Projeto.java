@@ -7,45 +7,50 @@ public class Projeto {
     private Gerente gerente;
     private ArrayList<Funcionario> funcionarios;
     private double custoTotalequipe;
+    private boolean projetoAtivo = true;
 
     public Projeto(String nomeProjeto, Gerente gerente, ArrayList<Funcionario> funcionarios) {
         this.nomeProjeto = nomeProjeto;
         this.gerente = gerente;
         this.funcionarios = funcionarios;
+        gerente.bonusGerente(funcionarios.size());
     }
 
-    public double getSalarioFinalGerente () {
-        this.gerente.salario += (gerente.getSalarioBase()*0.01)*funcionarios.size();
+    public double getSalarioGerente () {
         return gerente.salario;
     }
 
-    public double getSalarioFinalEquipe () {
-        double salarioFinalEquipe = 0;
-        for (Funcionario f : funcionarios) {
-            custoTotalequipe += f.getSalarioBase();
-            salarioFinalEquipe = custoTotalequipe + f.getSalarioBase();
-        }
-        return salarioFinalEquipe;
+    public double getSalarioEquipe () {
+        return custoTotalequipe;
     }
 
     public void adicionarFuncionarios (Funcionario funcionario) {
-        funcionarios.add(funcionario);
+        if (projetoAtivo) {
+            funcionarios.add(funcionario);
+            gerente.bonusGerente(funcionarios.size());
+            custoTotalequipe += funcionario.getSalario();
+        }
     }
 
     public void finalizarProjeto () {
-        this.gerente.salario += gerente.getSalarioBase()*0.10;
-        for (Funcionario f : funcionarios) {
-            f.salario += f.getSalarioBase()*0.10;
-            custoTotalequipe += f.getSalarioBase()*0.10;
+        if (projetoAtivo) {
+            gerente.bonusFinalizacao();
+            for (Funcionario f : funcionarios) {
+                f.bonusFinalizacao();
+                custoTotalequipe += f.getBonus();
+            }
+            projetoAtivo = false;
         }
+
     }
 
     @Override
     public String toString() {
-        return "nomeProjeto = " + nomeProjeto + "\n" +
-                "Gerente = " + getSalarioFinalGerente() + "\n" +
+        return  "==========================================" + "\n" +
+                "nomeProjeto = " + nomeProjeto + "\n" +
+                "Gerente = " + getSalarioGerente() + "\n" +
                 "Funcionarios = " + funcionarios.toString() + "\n" +
-                "Custo total do projeto = " + (getSalarioFinalGerente() + getSalarioFinalEquipe())
+                "Custo total do projeto = " + (getSalarioGerente() + getSalarioEquipe())
                 ;
     }
 }
