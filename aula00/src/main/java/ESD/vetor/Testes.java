@@ -12,5 +12,18 @@ public class Testes {
         vetor.removerUltimo();
         vetor.imprimir();
         vetor.obterTamanho();
+
+        //Removendo
+        System.out.println("removendo na posição 2");
+        vetor.remover(2);
+
+        System.out.println("Arranjo após a remoção");
+        vetor.imprimir();
+
+        //Removendo pelo objeto
+        System.out.println("removendo o elemento B");
+        vetor.remover("B");
+        System.out.println("Arranjo após a remoção");
+        vetor.imprimir();
     }
 }
