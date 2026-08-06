@@ -146,7 +146,7 @@ public class Agenda {
 
     public void buscaPorPrefixo(String nome) {
 
-        for (int i = 0; i < contatos.length; i++) {
+        for (int i = 0; i < tamanho; i++) {
             if (contatos[i].getNome().startsWith(nome)) {
                 IO.println(contatos[i].toString());
             }

@@ -26,6 +26,8 @@ public class Main {
         minhaAgenda.ListarTodosContatos();
         minhaAgenda.atualizarContato(contato4, new Contato("Davi", "48555555555", "ijdnogaga@gmail.com"));
         minhaAgenda.ListarTodosContatos();
+        minhaAgenda.buscaPorPrefixo("Jorge");
+
 
     }
 }
