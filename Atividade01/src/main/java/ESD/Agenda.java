@@ -3,16 +3,21 @@ package ESD;
 public class Agenda {
 
     private Contato[] contatos;
-    private int tamanho;
+    private int tamanho = 0;
 
     public Agenda(int quantidade) {
         this.contatos = new Contato[quantidade];
     }
 
     public boolean verificarContato(Contato contato) {
-        for (int i = 0; i < contatos.length; i++) {
-            if ( (contatos[i].getNome()).equals(contato.getNome()) || (contatos[i].getTelefone()).equals(contato.getTelefone()) ) {
-                return false;
+        if (contatos.length == 0) {
+            return true;
+        } else {
+            for (int i = 0; i < tamanho; i++) {
+                if ((contatos[i].getNome()).equals(contato.getNome()) || (contatos[i].getTelefone()).equals(contato.getTelefone()) ) {
+                    IO.println("Esse contato já existe!");
+                    return false;
+                }
             }
         }
         return true;
@@ -80,13 +85,22 @@ public class Agenda {
     }
 
     public void buscarContato (String nomeOuTelefone) {
-        for (int i = 0; i < contatos.length; i++) {
+        for (int i = 0; i < tamanho; i++) {
             if ((contatos[i].getNome()).equals(nomeOuTelefone) || (contatos[i].getTelefone()).equals(nomeOuTelefone)) {
                 IO.print(contatos[i]);
                 return;
             }
         }
-        IO.print("Contato não encontrado!");
+        IO.println("\n Contato não encontrado");
+    }
+
+    public void buscarContatoIndice (int indice) {
+        if (indice < contatos.length && indice > 0){
+            IO.println(contatos[indice]);
+        } else {
+            IO.println("\n Contato não encontrado");
+        }
+
     }
 
     public void atualizarContato (int indice, Contato contato) {
@@ -102,7 +116,7 @@ public class Agenda {
 
     public void atualizarContato (Contato contatoExistente, Contato contatoAtualizado) {
         for (int i = 0; i < contatos.length; i++) {
-            if (contatos[i].equals(contatoExistente)) {
+            if (contatos[i] == contatoExistente) {
                 contatos[i].setNome(contatoAtualizado.getNome());
                 contatos[i].setTelefone(contatoAtualizado.getTelefone());
                 contatos[i].setEmail(contatoAtualizado.getEmail());
@@ -124,6 +138,20 @@ public class Agenda {
         IO.println(tamanho);
     }
 
+    public void manipulacaoEmLote(Contato[] blocoContatos){
+        for (int i = 0; i < blocoContatos.length; i++) {
+            inserirContato(blocoContatos[i]);
+        }
+    }
+
+    public void buscaPorPrefixo(String nome) {
+
+        for (int i = 0; i < contatos.length; i++) {
+            if (contatos[i].getNome().startsWith(nome)) {
+                IO.println(contatos[i].toString());
+            }
+        }
+    }
 
 }
 
