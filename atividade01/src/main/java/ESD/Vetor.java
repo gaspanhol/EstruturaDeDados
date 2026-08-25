@@ -2,7 +2,7 @@ package ESD;
 
 import java.util.Random;
 
-public class Vetor<T> {
+public class Vetor<T extends Comparable<T>> {
 
     private T[] elementos;
     private int tamanho;
@@ -10,7 +10,7 @@ public class Vetor<T> {
 
     @SuppressWarnings("unchecked")
     public Vetor(int quantidade){
-        elementos = (T[])  new Object[quantidade];
+        elementos = (T[])  new Comparable[quantidade];
         tamanho = 0;
     }
 
@@ -44,7 +44,7 @@ public class Vetor<T> {
 
     @SuppressWarnings("unchecked")
     private void expandir() {
-        T[] novo = (T[]) new Object[elementos.length * 2];
+        T[] novo = (T[]) new Comparable[elementos.length * 2];
         for (int i = 0; i < elementos.length; i++) {
             novo[i] = elementos[i];
         }
@@ -71,7 +71,7 @@ public class Vetor<T> {
                 novaCapacidade = tamanho;
             }
 
-            T[] novo = (T[]) new Object[novaCapacidade];
+            T[] novo = (T[]) new Comparable[novaCapacidade];
 
             for (int i = 0; i < tamanho; i++) {
                 novo[i] = elementos[i];
@@ -141,8 +141,8 @@ public class Vetor<T> {
         }
         int i;
         for (i = tamanho - 1; i >= 0; i--) {
-            Integer atual = (Integer) elementos[i];
-            if (atual > (Integer) valor) {
+
+            if (elementos[i].compareTo(valor) > 0) {
                 elementos[i + 1] = elementos[i]; // desloca para a direita
             } else {
                 break;
@@ -204,25 +204,24 @@ public class Vetor<T> {
         return -1;
     }
 
-    public int buscarBinaria(Vetor<Integer> vetor, int alvo) {
+    public int buscarBinaria(int alvo) {
         int inicio = 0;
-        int fim = vetor.obterTamanho() - 1;
+        int fim = obterTamanho() - 1;
         zerarComparacoes();
 
         while(inicio <= fim){
 
             int meio = ((inicio + fim) / 2);
             comparacoes++;
-            if(vetor.ler(meio) == alvo) {
+            if((Integer)ler(meio) == alvo) {
                 return meio;
-            } else if (vetor.ler(meio) > alvo) {
+            } else if ((Integer)ler(meio) > alvo) {
                 fim = meio - 1;
             } else {
                 inicio = meio + 1;
             }
 
         }
-
         return -1;
     }
 
@@ -233,5 +232,7 @@ public class Vetor<T> {
     private void zerarComparacoes() {
         comparacoes = 0;
     }
+
+    public int getLenght(){return elementos.length;}
 
 }
