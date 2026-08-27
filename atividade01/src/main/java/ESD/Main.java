@@ -5,48 +5,132 @@ import java.util.Random;
 
 public class Main {
     static void main() {
-        long inicio = System.nanoTime();
-
-        // Algoritmo aqui
         Random random = new Random();
 
-        Vetor<Integer> v1 = new Vetor<>(10);
-        Vetor<Integer> v2 = new Vetor<>(100);
-        Vetor<Integer> v3 = new Vetor<>(1000);
+        Vetor<Integer> v1 = new Vetor<>(1000);
+        Vetor<Integer> v2 = new Vetor<>(10000);
+        Vetor<Integer> v3 = new Vetor<>(100000);
 
         //Preenchendo o v1
         for (int i = 0; i < v1.getLenght(); i++) {
-            int valorSorteado = random.nextInt(10);
+            int valorSorteado = random.nextInt(1000000);
             v1.inserirOrdenado(valorSorteado);
         }
-        v1.imprimir();
+        //v1.imprimir();
 
         //Preenchendo o v2
         for (int i = 0; i < v2.getLenght(); i++) {
-            int valorSorteado = random.nextInt(100);
+            int valorSorteado = random.nextInt(1000000);
             v2.inserirOrdenado(valorSorteado);
         }
-        v2.imprimir();
+        //v2.imprimir();
 
         //Preenchendo o v3
-        v3.inserirOrdenado(70);
         for (int i = 0; i < v3.getLenght(); i++) {
-            int valorSorteado = random.nextInt(1000);
+            int valorSorteado = random.nextInt(1000000);
             v3.inserirOrdenado(valorSorteado);
         }
-        v3.imprimir();
+        //v3.imprimir();
 
-        IO.println(v1.buscarBinaria(70));
-        IO.println(v1.mostrarComparacoes());
+        // ============ Valores para os testes ============
+        int valorInicio1 = v1.ler(0);
+        int valorMeio1 = v1.ler((v1.obterTamanho()/2));
+        int valorFim1 = v1.ler(v1.obterTamanho() - 1);
+        int[] alvosPossiveisV1 = {valorInicio1, valorMeio1, valorFim1};
 
-        IO.println(v2.buscarBinaria(70));
-        IO.println(v2.mostrarComparacoes());
+        int valorInicio2 = v2.ler(0);
+        int valorMeio2 = v2.ler(v2.obterTamanho()/2);
+        int valorFim2 = v2.ler(v2.obterTamanho() - 1);
+        int[] alvosPossiveisV2 = {valorInicio2, valorMeio2, valorFim2};
 
-        IO.println(v3.buscarBinaria(70));
-        IO.println(v3.mostrarComparacoes());
+        int valorInicio3 = v3.ler(0);
+        int valorMeio3 = v3.ler(v3.obterTamanho()/2);
+        int valorFim3 = v3.ler(v3.obterTamanho() - 1);
+        int[] alvosPossiveisV3 = {valorInicio3, valorMeio3, valorFim3};
 
-        long fim = System.nanoTime();
-        long duracaoMs = (fim - inicio) / 1000000;
-        System.out.println("Tempo: " + duracaoMs + " ms");
+        // ============ Busca Linear ============
+        System.out.println("Busca linear:\n");
+
+        System.out.println("Vetor 1 (1.000 elementos):");
+        for (int i = 0; i < 3; i++) {
+            long inicioL = System.nanoTime();
+            v1.buscarLinearOrdenada(alvosPossiveisV1[i]);
+            long fimL = System.nanoTime();
+            long duracaoMsL = (fimL - inicioL) / 1000000;
+            System.out.println("Tempo: " + duracaoMsL + " ms");
+            System.out.println("indice do valor alvo v1: " + v1.buscarLinearOrdenada(alvosPossiveisV1[i]));
+            System.out.println("Comparacoes realizadas v1: " + v1.mostrarComparacoes());
+            System.out.println("====================================================");
+        }
+
+        System.out.println();
+        System.out.println("Vetor 2 (10.000 elementos):");
+        for (int i = 0; i < 3; i++) {
+            long inicioL = System.nanoTime();
+            v2.buscarLinearOrdenada(alvosPossiveisV2[i]);
+            long fimL = System.nanoTime();
+            long duracaoMsL = (fimL - inicioL) / 1000000;
+            System.out.println("Tempo: " + duracaoMsL + " ms");
+            System.out.println("indice do valor alvo v2: " + v2.buscarLinearOrdenada(alvosPossiveisV2[i]));
+            System.out.println("Comparacoes realizadas v2: " + v2.mostrarComparacoes());
+            System.out.println("====================================================");
+        }
+
+        System.out.println();
+        System.out.println("Vetor 3 (100.000 elementos):");
+        for (int i = 0; i < 3; i++) {
+            long inicioL = System.nanoTime();
+            v3.buscarLinearOrdenada(alvosPossiveisV3[i]);
+            long fimL = System.nanoTime();
+            long duracaoMsL = (fimL - inicioL) / 1000000;
+            System.out.println("Tempo: " + duracaoMsL + " ms");
+            System.out.println("indice do valor alvo v3: " + v3.buscarLinearOrdenada(alvosPossiveisV3[i]));
+            System.out.println("Comparacoes realizadas v3: " + v3.mostrarComparacoes());
+            System.out.println("====================================================");
+        }
+
+        // ============ Busca Binaria ============
+
+        System.out.println();
+        System.out.println("Busca Binaria:\n");
+
+        System.out.println("Vetor 1 (1.000 elementos):");
+        for (int i = 0; i < 3; i++) {
+            long inicioL = System.nanoTime();
+            v1.buscarBinaria(alvosPossiveisV1[i]);
+            long fimL = System.nanoTime();
+            long duracaoMsL = (fimL - inicioL) / 1000000;
+            System.out.println("Tempo: " + duracaoMsL + " ms");
+            System.out.println("indice do valor alvo v1: " + v1.buscarBinaria(alvosPossiveisV1[i]));
+            System.out.println("Comparacoes realizadas v1: " + v1.mostrarComparacoes());
+            System.out.println("====================================================");
+        }
+
+        System.out.println();
+        System.out.println("Vetor 2 (10.000 elementos):");
+        for (int i = 0; i < 3; i++) {
+            long inicioL = System.nanoTime();
+            v2.buscarBinaria(alvosPossiveisV2[i]);
+            long fimL = System.nanoTime();
+            long duracaoMsL = (fimL - inicioL) / 1000000;
+            System.out.println("Tempo: " + duracaoMsL + " ms");
+            System.out.println("indice do valor alvo v2: " + v2.buscarBinaria(alvosPossiveisV2[i]));
+            System.out.println("Comparacoes realizadas v2: " + v2.mostrarComparacoes());
+            System.out.println("====================================================");
+        }
+
+        System.out.println();
+        System.out.println("Vetor 3 (100.000 elementos):");
+        for (int i = 0; i < 3; i++) {
+            long inicioL = System.nanoTime();
+            v3.buscarBinaria(alvosPossiveisV3[i]);
+            long fimL = System.nanoTime();
+            long duracaoMsL = (fimL - inicioL) / 1000000;
+            System.out.println("Tempo: " + duracaoMsL + " ms");
+            System.out.println("indice do valor alvo v3: " + v3.buscarBinaria(alvosPossiveisV3[i]));
+            System.out.println("Comparacoes realizadas v3: " + v3.mostrarComparacoes());
+            System.out.println("====================================================");
+        }
+
     }
 }

@@ -115,7 +115,6 @@ public class Vetor<T extends Comparable<T>> {
     public void inserirOrdenadov2(T valor) {
 
         if (localizar(valor) != -1) {
-            System.out.println("Valor " + valor + " já existe na lista.");
             return;
         }
         if (tamanho == 0) {
@@ -133,7 +132,6 @@ public class Vetor<T extends Comparable<T>> {
 
     public void inserirOrdenado(T valor) {
         if (localizar(valor) != -1) {
-            System.out.println("Valor " + valor + " já existe na lista.");
             return;
         }
         if (tamanho == elementos.length) {
@@ -191,13 +189,13 @@ public class Vetor<T extends Comparable<T>> {
         return -1;
     }
 
-    public int buscarLinearOrdenada(Vetor<Integer> vetor, int alvo) {
+    public int buscarLinearOrdenada(int alvo) {
         zerarComparacoes();
-        for (int i = 0; i < vetor.obterTamanho(); i++) {
+        for (int i = 0; i < obterTamanho(); i++) {
             comparacoes++;
-            if(vetor.ler(i) == alvo){
+            if((Integer)ler(i) == alvo){
                 return i;
-            } else if (vetor.ler(i) > alvo) {
+            } else if ((Integer)ler(i) > alvo) {
                 return -1;
             }
         }
