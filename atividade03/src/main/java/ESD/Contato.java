@@ -1,6 +1,6 @@
 package ESD;
 
-public class Contato {
+public class Contato implements Comparable<Contato> {
     private String nome;
     private String telefone;
     private String email;
@@ -42,5 +42,10 @@ public class Contato {
                 ", Telefone='" + telefone + '\'' +
                 ", email='" + email + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Contato o) {
+        return this.nome.compareToIgnoreCase(o.nome);
     }
 }

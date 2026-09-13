@@ -2,180 +2,115 @@ package ESD;
 
 public class Agenda {
 
-    private Vetor[] arrayPrincipal = new Vetor[26];
-    private Contato[] contatos;
-    private int tamanho = 0;
+    private Vetor<Contato>[] vetorPrincipal;
 
     public Agenda(int quantidade) {
-        this.contatos = new Contato[quantidade];
+        this.vetorPrincipal = (Vetor<Contato>[]) new Vetor[26];
+        for (int i = 0; i < 26; i++) {
+            vetorPrincipal[i] = new Vetor<>(quantidade);
+        }
     }
 
-    public boolean verificarContato(Contato contato) {
-        if (contatos.length == 0) {
-            return true;
-        } else {
-            for (int i = 0; i < tamanho; i++) {
-                if ((contatos[i].getNome()).equals(contato.getNome()) || (contatos[i].getTelefone()).equals(contato.getTelefone()) ) {
-                    IO.println("Esse contato já existe!");
+    private int obterIndice(String nome) {
+        char letraInicial = Character.toUpperCase(nome.charAt(0));
+        return  letraInicial - 'A';
+    }
+
+    public boolean inserirContato (Contato contato) {
+        int indiceAZ= obterIndice(contato.getNome());
+
+        if (indiceAZ == -1) {
+            IO.println("Nome inválido.");
+            return false;
+        }
+
+        Vetor<Contato> vetorContato = this.vetorPrincipal[indiceAZ];
+
+        if (vetorContato.contem(contato)) {
+            IO.println("Contato ja existente");
+            return false;
+        }
+
+        vetorContato.inserirOrdenado(contato);
+        IO.println("Contato " +  contato.getNome() + " adicionado com sucesso na letra '" + contato.getNome().charAt(0) + "' (indice " + indiceAZ + ")!" );
+        return true;
+
+    }
+
+    public boolean remover(String nome, String telefone) {
+        int indiceAZ= obterIndice(nome);
+
+        if (indiceAZ == -1) {
+            IO.println("Nome inválido.");
+            return false;
+        }
+
+        Vetor<Contato> vetorContato = this.vetorPrincipal[indiceAZ];
+
+        for (int i = 0; i < vetorContato.obterTamanho(); i++) {
+            Contato contato = vetorContato.ler(i);
+            if (contato.getNome().equals(nome) && (contato.getTelefone().equals(telefone))) {
+                vetorContato.remover(i);
+                IO.println("Contato " +  contato.getNome() + " removido com sucesso do vetor '" + contato.getNome().charAt(0) + "'!\n" );
+                return true;
+            }
+        }
+        IO.println("Contato nao encontrado");
+        return false;
+    }
+
+    public Contato buscarContato (String nome) {
+        int indiceAZ= obterIndice(nome);
+
+        if (indiceAZ == -1) {
+            IO.println("Nome inválido.");
+            return null;
+        }
+
+        Vetor<Contato> vetorContato = vetorPrincipal[indiceAZ];
+
+        for (int i = 0; i < vetorContato.obterTamanho(); i++) {
+            Contato contato = vetorContato.ler(i);
+            if ((contato.getNome()).equals(nome)) {
+                IO.println("Contato " +  contato.getNome() + " encontrado no Vetor '" + contato.getNome().charAt(0) + "': " +  contato.getNome() + ", Telefone: " + contato.getTelefone() + "\n" );
+                return contato;
+            }
+        }
+        IO.println("\n Contato não encontrado \n");
+        return null;
+    }
+
+    public boolean atualizarContato (String nomeAtual, Contato contatoAtualizado) {
+        int indiceAntigo= obterIndice(nomeAtual);
+
+        if (indiceAntigo == -1) {
+            IO.println("Nome inválido.");
+            return false;
+        }
+
+        Vetor<Contato> vetorAntigo = vetorPrincipal[indiceAntigo];
+
+        for (int i = 0; i < vetorAntigo.obterTamanho(); i++) {
+            Contato contato = vetorAntigo.ler(i);
+            if (contato.getNome().equals(nomeAtual)) {
+                int novoIndice = obterIndice(contatoAtualizado.getNome());
+
+                if (novoIndice == -1) {
+                    IO.println("Novo nome inválido.");
                     return false;
                 }
+
+                vetorAntigo.remover(i);
+                contato.setNome(contatoAtualizado.getNome());
+                contato.setTelefone(contatoAtualizado.getTelefone());
+                contato.setEmail(contatoAtualizado.getEmail());
+                vetorPrincipal[novoIndice].inserirOrdenado(contato);
+                IO.println("Contato " +  contato.getNome() + " atualizado com sucesso!\n" );
+                return true;
             }
         }
-        return true;
+        IO.println("Contato não encontrado.");
+        return false;
     }
-
-    public void inserirContato (Contato contato) {
-        if (verificarContato(contato)) {
-            if(tamanho < contatos.length) {
-                contatos[tamanho] = contato;
-                tamanho++;
-                expandir();
-            } else {
-                IO.println("Vetor ta cheio!");
-            }
-        }
-    }
-
-    public void inserirContato (int indice, Contato contato) {
-        if (tamanho >= contatos.length) {
-            IO.println("Vetor Cheio!");
-            return;
-        }
-
-        if (indice < 0 || indice > contatos.length){
-            IO.println("Posição Inválida!");
-            return;
-        }
-
-        for (int i = tamanho; i > indice ; i--) {
-            contatos[i] = contatos[i-1];
-            expandir();
-        }
-        contatos[indice] = contato;
-        tamanho++;
-    }
-
-    private void expandir() {
-        Contato[] novo = new Contato[contatos.length*2];
-
-        for (int i = 0; i < contatos.length; i++) {
-            novo[i] = contatos[i];
-        }
-        this.contatos = novo;
-    }
-
-    public void removerUltimo() {
-        if (tamanho > 0) {
-            contatos[tamanho - 1] = null;
-            tamanho--;
-        }
-    }
-
-    public void remover(int indice) {
-        if (indice < 0 || indice >= tamanho) {
-            System.out.println("indice inválido");
-            return;
-        }
-
-        for (int i = indice; i < tamanho; i++) {
-            contatos[i] = contatos[i+1];
-        }
-
-        contatos[tamanho-1] = null;
-        tamanho--;
-        reduzir();
-    }
-
-    public void remover(String nome, String telefone) {
-        for (int i = 0; i < tamanho; i++) {
-            if ((contatos[i].getNome()).equals(nome) && (contatos[i].getTelefone()).equals(telefone)) {
-                remover(i);
-                return;
-            }
-        }
-        contatos[tamanho-1] = null;
-        tamanho--;
-        reduzir();
-    }
-
-    private void reduzir() {
-        if (tamanho <= contatos.length/4) {
-            Contato[] novo = new Contato[contatos.length/2];
-            for (int i = 0; i < tamanho; i++) {
-                novo[i] = contatos[i];
-            }
-            this.contatos = novo;
-        }
-    }
-
-    public void buscarContato (String nomeOuTelefone) {
-        for (int i = 0; i < tamanho; i++) {
-            if ((contatos[i].getNome()).equals(nomeOuTelefone) || (contatos[i].getTelefone()).equals(nomeOuTelefone)) {
-                IO.print(contatos[i]);
-                return;
-            }
-        }
-        IO.println("\n Contato não encontrado");
-    }
-
-    public void buscarContatoIndice (int indice) {
-        if (indice < contatos.length && indice > 0){
-            IO.println(contatos[indice]);
-        } else {
-            IO.println("\n Contato não encontrado");
-        }
-
-    }
-
-    public void atualizarContato (int indice, Contato contato) {
-        if (verificarContato(contato)) {
-            contatos[indice].setNome(contato.getNome());
-            contatos[indice].setTelefone(contato.getTelefone());
-            contatos[indice].setEmail(contato.getEmail());
-            IO.println("Contato modificado!");
-        } else {
-            IO.println("Não é possível adicionar dados repetidos a um contato");
-        }
-    }
-
-    public void atualizarContato (Contato contatoExistente, Contato contatoAtualizado) {
-        for (int i = 0; i < contatos.length; i++) {
-            if (contatos[i] == contatoExistente) {
-                contatos[i].setNome(contatoAtualizado.getNome());
-                contatos[i].setTelefone(contatoAtualizado.getTelefone());
-                contatos[i].setEmail(contatoAtualizado.getEmail());
-                IO.println("Contato modificado!");
-            }
-        }
-    }
-
-    public void ListarTodosContatos() {
-        IO.print("[");
-        for (int i = 0; i < contatos.length; i++) {
-            IO.print(contatos[i]);
-            IO.print(",");
-        }
-        IO.println("]");
-    }
-
-    public void obterTamanhoAgenda() {
-        IO.println(tamanho);
-    }
-
-    public void manipulacaoEmLote(Contato[] blocoContatos){
-        for (int i = 0; i < contatos.length; i++) {
-            inserirContato(blocoContatos[i]);
-        }
-    }
-
-    public void buscaPorPrefixo(String nome) {
-
-        for (int i = 0; i < tamanho; i++) {
-            if (contatos[i].getNome().startsWith(nome)) {
-                IO.println(contatos[i].toString());
-            }
-        }
-    }
-
 
 }

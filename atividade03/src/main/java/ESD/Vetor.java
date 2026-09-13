@@ -25,7 +25,7 @@ public class Vetor<T extends  Comparable<T>> {
             expandir();
         }
 
-        if (indice < 0 || indice > elementos.length) {
+        if (indice < 0 || indice > tamanho) {
             System.out.println("Posição Inválida");
             return;
         }
@@ -41,7 +41,7 @@ public class Vetor<T extends  Comparable<T>> {
 
     @SuppressWarnings("unchecked")
     private void expandir() {
-        T[] novo = (T[]) new Object[elementos.length * 2];
+        T[] novo = (T[]) new Comparable[elementos.length * 2];
         for (int i = 0; i < elementos.length; i++) {
             novo[i] = elementos[i];
         }
@@ -68,7 +68,7 @@ public class Vetor<T extends  Comparable<T>> {
                 novaCapacidade = tamanho;
             }
 
-            T[] novo = (T[]) new Object[novaCapacidade];
+            T[] novo = (T[]) new Comparable[novaCapacidade];
 
             for (int i = 0; i < tamanho; i++) {
                 novo[i] = elementos[i];
@@ -85,7 +85,7 @@ public class Vetor<T extends  Comparable<T>> {
         }
 
         // Desloca os elementos para a esquerda
-        for (int i = indice; i < tamanho; i++) {
+        for (int i = indice; i < tamanho - 1; i++) {
             elementos[i] = elementos[i+1];
         }
         elementos[tamanho-1] = null;
@@ -154,7 +154,7 @@ public class Vetor<T extends  Comparable<T>> {
 
     public int localizar(T elemento) {
         for (int i = 0; i < tamanho; i++) {
-            if (elementos[i] != null && elementos[i] == elemento) {
+            if (elementos[i] != null && elementos[i].compareTo(elemento) == 0) {
                 return i;
             }
         }
