@@ -1,6 +1,6 @@
 package ESD;
 
-public class Vetor<T extends  Comparable<T>> {
+public class Vetor<T  extends Comparable<T>> {
 
     private T[] elementos;
     private int tamanho;
@@ -11,6 +11,10 @@ public class Vetor<T extends  Comparable<T>> {
         tamanho = 0;
     }
 
+    public T ler(int indice) {
+        return elementos[indice];
+    }
+
     public void inserir(T elemento) {
         if (tamanho == elementos.length) {
             expandir();
@@ -18,26 +22,6 @@ public class Vetor<T extends  Comparable<T>> {
         elementos[tamanho] = elemento;
         tamanho++;
     }
-
-    public void inserir(int indice, T elemento) {
-
-        if (tamanho == elementos.length) {
-            expandir();
-        }
-
-        if (indice < 0 || indice > tamanho) {
-            System.out.println("Posição Inválida");
-            return;
-        }
-
-        // Desloca os elementos para a direita
-        for (int i = tamanho ; i > indice; i-- ) {
-            elementos[i] = elementos[i-1];
-        }
-        elementos[indice] = elemento;
-        tamanho++;
-    }
-
 
     @SuppressWarnings("unchecked")
     private void expandir() {
@@ -50,30 +34,11 @@ public class Vetor<T extends  Comparable<T>> {
 
     @SuppressWarnings("unchecked")
     private void reduzir() {
-
-        if (elementos.length <= 1) {
-            return;
-        }
-
-        if (tamanho <= elementos.length / 4) {
-
-            int novaCapacidade = elementos.length / 2;
-            // Nunca permitir capacidade menor que 1
-            if (novaCapacidade < 1) {
-                novaCapacidade = 1;
-            }
-
-            // A capacidade não pode ficar menor que o tamanho
-            if (novaCapacidade < tamanho) {
-                novaCapacidade = tamanho;
-            }
-
-            T[] novo = (T[]) new Comparable[novaCapacidade];
-
+        if (tamanho <= elementos.length/4) {
+            T[] novo = (T[]) new Comparable[elementos.length/2];
             for (int i = 0; i < tamanho; i++) {
                 novo[i] = elementos[i];
             }
-
             elementos = novo;
         }
     }
@@ -84,8 +49,10 @@ public class Vetor<T extends  Comparable<T>> {
             return;
         }
 
-        // Desloca os elementos para a esquerda
-        for (int i = indice; i < tamanho - 1; i++) {
+
+
+
+        for (int i = indice; i < tamanho; i++) {
             elementos[i] = elementos[i+1];
         }
         elementos[tamanho-1] = null;
@@ -93,40 +60,23 @@ public class Vetor<T extends  Comparable<T>> {
         reduzir();
     }
 
-    public boolean remover(T elemento) {
+    public void inserir(int indice, T elemento) {
 
-        int indice = localizar(elemento);
-        if (indice == -1) {
-            return false;
+        if (tamanho == elementos.length) {
+            expandir();
         }
-        remover(indice);
-        return true;
-    }
 
-    public boolean contem(T elemento) {
-        return localizar(elemento) != -1;
-    }
-
-
-
-    public void inserirOrdenadov2(T valor) {
-
-        if (localizar(valor) != -1) {
-            System.out.println("Valor " + valor + " já existe na lista.");
+        if (indice < 0 || indice > elementos.length) {
+            System.out.println("Posição Inválida");
             return;
         }
-        if (tamanho == 0) {
-            inserir(tamanho,valor);
-            return;
-        }
-        for (int i = 0; i < tamanho; i++) {
-            if ((Integer)valor < (Integer) elementos[i]) {
-                inserir(i,valor);
-                break;
-            }
-        }
-    }
 
+        for (int i = tamanho ; i > indice; i-- ) {
+            elementos[i] = elementos[i-1];
+        }
+        elementos[indice] = elemento;
+        tamanho++;
+    }
 
     public void inserirOrdenado(T valor) {
         if (localizar(valor) != -1) {
@@ -136,6 +86,7 @@ public class Vetor<T extends  Comparable<T>> {
         if (tamanho == elementos.length) {
             expandir();
         }
+
         int i;
         for (i = tamanho - 1; i >= 0; i--) {
             if (elementos[i].compareTo(valor) > 0) {
@@ -148,13 +99,42 @@ public class Vetor<T extends  Comparable<T>> {
         tamanho++;
     }
 
+
+
+
+
+    public void inserirOrdenadov2(T valor) {
+
+        if (localizar(valor) != -1) {
+            System.out.println("Valor " + valor + " já existe na lista.");
+            return;
+        }
+
+        if (tamanho == 0) {
+            inserir(tamanho,valor);
+            return;
+        }
+        for (int i = 0; i < tamanho; i++) {
+            if ((Integer)valor > (Integer) elementos[i]) {
+                inserir(i+1,valor);
+                break;
+            }
+        }
+    }
+
+
+
+
+
+
+
     public int obterTamanho() {
         return tamanho;
     }
 
-    public int localizar(T elemento) {
+    public int localizar(T valor) {
         for (int i = 0; i < tamanho; i++) {
-            if (elementos[i] != null && elementos[i].compareTo(elemento) == 0) {
+            if (elementos[i] == valor) {
                 return i;
             }
         }
@@ -173,47 +153,6 @@ public class Vetor<T extends  Comparable<T>> {
         System.out.println("]");
     }
 
-    public T ler(int indice){return elementos[indice];}
 
-
-    public int buscaLinear(Vetor<Integer> vetor, int alvo) {
-        for (int i = 0; i < vetor.obterTamanho(); i++) {
-            if(vetor.ler(i) == alvo){
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    public int buscarLinearOrdenada(Vetor<Integer> vetor, int alvo) {
-        for (int i = 0; i < vetor.obterTamanho(); i++) {
-            if(vetor.ler(i) == alvo){
-                return i;
-            } else if (vetor.ler(i) > alvo) {
-                return -1;
-            }
-        }
-        return -1;
-    }
-
-    public int buscarBinaria(Vetor<Integer> vetor, int alvo) {
-        int inicio = 0;
-        int fim = vetor.obterTamanho();
-
-        while(inicio <= fim){
-
-            int meio = ((inicio + fim) / 2);
-
-            if(vetor.ler(meio) == alvo) {
-                return meio;
-            } else if (vetor.ler(meio) > alvo) {
-                fim = meio;
-            } else {
-                inicio = meio + 1;
-            }
-
-        }
-        return -1;
-    }
 
 }
