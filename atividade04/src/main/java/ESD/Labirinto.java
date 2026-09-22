@@ -57,9 +57,22 @@ public class Labirinto {
 //    private int linhaFinal = 21;
 //    private int colunaFinal = 49;
 
+    private int playerLinha = linhaInicial;
+    private int playerColuna = colunaInicial;
+
+    public static void main(String[] args) {
+        Labirinto labirinto = new Labirinto();
+        IO.println("Labirinto: \n");
+        labirinto.imprimir();
+
+        labirinto.resolver();
+
+        IO.println("Labirinto resolvido: \n");
+        labirinto.imprimir();
+    }
+
+
     public void imprimir() {
-
-
         for (int i = 0; i < mapa.length; i++) {
             for (int j = 0; j < mapa[i].length; j++) {
                 System.out.print(mapa[i][j]);
@@ -68,28 +81,60 @@ public class Labirinto {
         }
     }
 
-    private char[][] player = new char[1][0];
+    public boolean resolver () {
+        Stack<Posicao> pilha = new Stack<>(mapa.length*mapa[0].length);
 
-//    public void resolver () {
-//        Pilha stack
-//        pilha.push(new Posicao((linhaInicial, colunaInicial)));
-//
-//        if( mover(pilha, posicao)) {
-//            continue
-//        }
-//    }
+        pilha.push(new Posicao(linhaInicial,colunaInicial,null));
 
-    public static void main(String[] args) {
-        Labirinto labirinto = new Labirinto();
-        labirinto.imprimir();
+        while (!pilha.isEmpty()) {
+            Posicao posicaoAtual = pilha.pop();
+            playerLinha = posicaoAtual.linha;
+            playerColuna = posicaoAtual.coluna;
+
+            if(playerLinha == linhaFinal && playerColuna == colunaFinal) {
+                mostrarCaminho(posicaoAtual);
+                return true;
+            }
+
+            if(mapa[playerLinha][playerColuna] == ' ' || mapa[playerLinha][playerColuna] == 'P') {
+
+                if (mapa[playerLinha][playerColuna] != 'P') {
+                    mapa[playerLinha][playerColuna] = '%';
+                }
+                verificarEEmpilhar(pilha, playerLinha - 1, playerColuna, posicaoAtual);
+                verificarEEmpilhar(pilha, playerLinha + 1, playerColuna, posicaoAtual);
+                verificarEEmpilhar(pilha, playerLinha, playerColuna - 1, posicaoAtual);
+                verificarEEmpilhar(pilha, playerLinha, playerColuna + 1, posicaoAtual);
+            }
+        }
+        return false;
     }
 
-//    public void mover(){
-//        if()
-//    }
+    public void verificarEEmpilhar(Stack<Posicao> pilha, int linha, int coluna, Posicao posicaoAnterior) {
+        if (linha >= mapa.length || linha < 0) {
+            return;
+        }
 
-    public void posicao() {
+        if (coluna >= mapa[0].length || coluna < 0) {
+            return;
+        }
 
+        if(mapa[linha][coluna] == ' ' || mapa[linha][coluna] == 'T') {
+            pilha.push(new Posicao(linha, coluna, posicaoAnterior));
+        }
+    }
+
+    private void mostrarCaminho(Posicao posicaoFinal) {
+        Posicao atual = posicaoFinal.posicaoAnterior;
+
+        while (atual != null) {
+            if(mapa[atual.linha][atual.coluna] == ' ' || mapa[atual.linha][atual.coluna]=='%') {
+                mapa[atual.linha][atual.coluna] = '+';
+            }
+            atual = atual.posicaoAnterior;
+        }
+        mapa[linhaInicial][colunaInicial] = 'P';
+        mapa[linhaFinal][colunaFinal] = 'T';
     }
 
 }
