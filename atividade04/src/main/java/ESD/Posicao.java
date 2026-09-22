@@ -11,8 +11,6 @@ public class Posicao implements Comparable<Posicao>{
         this.posicaoAnterior = posicaoAnterior;
     }
 
-
-
     @Override
     public int compareTo(Posicao o) {
         return 0;

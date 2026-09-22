@@ -44,15 +44,12 @@ public class Vetor<T  extends Comparable<T>> {
     }
 
     public void remover(int indice) {
-        if (indice < 0 || indice >= tamanho - 1) {
-            System.out.println("Indice Inválido");
+        if (indice < 0 || indice >= tamanho) {
+//            System.out.println("Indice Inválido");
             return;
         }
 
-
-
-
-        for (int i = indice; i < tamanho; i++) {
+        for (int i = indice; i < tamanho - 1; i++) {
             elementos[i] = elementos[i+1];
         }
         elementos[tamanho-1] = null;
