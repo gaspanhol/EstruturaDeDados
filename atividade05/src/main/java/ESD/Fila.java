@@ -3,19 +3,23 @@ package ESD;
 public class Fila<T extends Comparable<T>> {
 
     private T[] elementos;
+    private int inicio;
+    private int fim;
     private int tamanho;
 
     public Fila(int capacidade) {
         this.elementos = (T[]) new Comparable[capacidade];
         this.tamanho = 0;
+        fim = -1;
+        inicio = 0;
     }
 
     public void enfileirar(T elemento) {
         if (tamanho == elementos.length) {
             throw  new RuntimeException("Fila cheia");
         }
-
-        elementos[tamanho] = elemento;
+        fim = (fim + 1) % elementos.length;
+        elementos[fim] = elemento;
         tamanho++;
 
     }
@@ -38,37 +42,20 @@ public class Fila<T extends Comparable<T>> {
         if (isEmpty()) {
             throw new RuntimeException("Fila vazia");
         }
-        T elemento = elementos[0];
+        T valor = elementos[inicio];
+        elementos[inicio] = null;
 
-        for (int i = 0;  i < tamanho -1; i++) {
-            elementos[i] = elementos[i+1];
-        }
-        elementos[tamanho -1] = null;
+        inicio = (inicio +1) % elementos.length;
         tamanho--;
-        return elemento;
-
-    }
-
-    public T frente() {
-        if (isEmpty()) {
-            throw  new RuntimeException("Fila vazia");
-        }
-        return elementos[0];
+        return valor;
     }
 
     public void imprimir() {
-        if (isEmpty()) {
-            System.out.println("Fila Vazia!");
-        } else {
-            System.out.println("Fila: ");
-            for (int i = 0; i < tamanho; i++) {
-                System.out.print(elementos[i] + " ");
-            }
-            System.out.println();
+        System.out.print("Fila: ");
+        for (int i = 0; i < tamanho ; i++) {
+            int indice = (inicio + i) % elementos.length;
+            System.out.print(elementos[indice] + " ");
         }
+        System.out.println();
     }
-
-
-
-
 }
